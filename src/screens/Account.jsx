@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../context/authContext';
 import {
     View,
@@ -11,10 +11,65 @@ import {
     ScrollView,
   } from "react-native";
 import FooterMenu from '../components/FooterMenu';
-
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from "@react-navigation/core";
 
 const Account = () =>{
 
+const [state, setState] = useContext(AuthContext)
+const {user} = state
+
+const [name, setName] = useState(user?.name);
+const [password, setPassword] = useState(user?.password);
+const [email] = useState(user?.email);
+const [loading, setLoading] = useState(false);
+const navigation = useNavigation()
+
+// useEffect(()=>{
+
+//   console.log(state.user.name)
+//   setName(state.user.name)
+  
+//    ,[]
+//   })
+
+const handleUpdate = async () => {
+  try{
+    setLoading(true);
+    const token = state.token
+
+    
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json', // if you need to specify content type
+      }
+    };
+
+    const { data } = await axios.put("https://social-media-backend-rn.onrender.com/api/updateuser", {
+      name,
+      password,
+      email,
+    }, config);
+    setLoading(false);
+    let UD = JSON.stringify(data);
+
+    setState({ ...state, user: UD?.updatedUser });
+    alert(data && data.message);
+    navigation.navigate("Login")
+  }catch(error){
+    console.log(error)
+    
+    if(error.status === 400){
+      alert("Password must be 6 character long")
+    }
+
+  }
+}
+
+
+  
     return(
         <View style={styles.container}>
         <ScrollView>
@@ -34,42 +89,49 @@ const Account = () =>{
             <Text style={styles.inputText}>Name</Text>
             <TextInput
               style={styles.inputBox}
-              // value={name}
-              // onChangeText={(text) => setName(text)}
+              value={name}
+              onChangeText={(text) => setName(text)}
             />
           </View>
+
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Email</Text>
-            {/* <TextInput style={styles.inputBox} value={email} editable={false} /> */}
+            <TextInput style={styles.inputBox} value={email} editable={false} />
           </View>
+
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Password</Text>
             <TextInput
               style={styles.inputBox}
-              // value={password}
-              // onChangeText={(text) => setPassword(text)}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
               secureTextEntry={true}
             />
           </View>
-          <View style={styles.inputContainer}>
+
+          {/* <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Role</Text>
             <TextInput
               style={styles.inputBox}
               // value={state?.user.role}
               editable={false}
             />
-          </View>
+          </View> */}
+
           <View style={{ alignItems: "center" }}>
-            {/* <TouchableOpacity style={styles.updateBtn} onPress={handleUpdate}> */}
+            <TouchableOpacity style={styles.updateBtn} onPress={handleUpdate}>
               <Text style={styles.updateBtnText}>
-                {/* {loading ? "Please Wait" : "Update Profile"} */}
+                {loading ? "Please Wait" : "Update Profile"}
               </Text>
-            {/* </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
+
         </ScrollView>
+
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <FooterMenu />
         </View>
+
       </View>
     )
 }

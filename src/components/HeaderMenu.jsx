@@ -3,14 +3,18 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+
 
 const HeaderMenu = () => {
   const [state, setState] = useContext(AuthContext);
+  const navigation = useNavigation()
   //logout
   const handleLogout = async () => {
     setState({ token: "", user: null });
     await AsyncStorage.removeItem("@auth");
     alert("logout Successfully");
+    navigation.navigate("Login")
   };
 
   return (
