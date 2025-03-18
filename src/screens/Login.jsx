@@ -39,7 +39,7 @@ const Login = () =>{
             console.log(error);
             if (error.response.status === 401){
                 alert(error.response.data.message)
-            }else if (error.response.status === 402){
+            }else if (error.response.status === 403){
                 alert("Please enter correct username or password")
             }
         }

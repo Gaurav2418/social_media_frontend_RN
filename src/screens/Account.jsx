@@ -64,9 +64,9 @@ const handleUpdate = async () => {
     if(error.status === 400){
       alert("Password must be 6 character long")
     }
-
   }
-}
+  
+};
 
 
   

@@ -9,6 +9,7 @@ import Home from './src/screens/Home';
 import Account from './src/screens/Account';
 import Post from './src/screens/Post';
 import Myposts from './src/screens/Myposts';
+import { PostProvider } from './context/postContext';
 
 export default function App() {
 
@@ -16,25 +17,27 @@ export default function App() {
 
   return (
     <AuthProvider>
-        <NavigationContainer >
-        {/* <SafeAreaView style={styles.container}> */}
-        {/* <Text style={styles.hello}> HElllo</Text> */}
-          <Stack.Navigator >   
+      <PostProvider>
+            <NavigationContainer >
+            {/* <SafeAreaView style={styles.container}> */}
+            {/* <Text style={styles.hello}> HElllo</Text> */}
+              <Stack.Navigator >   
 
-          <Stack.Screen name='Register' component={Register}  options={{headerShown:false}}/>
-          <Stack.Screen name='Home' component={Home}/>
+              <Stack.Screen name='Register' component={Register}  options={{headerShown:false}}/>
+              <Stack.Screen name='Home' component={Home}/>
 
-          <Stack.Screen name='Login' component={Login}/>
-          <Stack.Screen name='Account' component={Account}/>
-          <Stack.Screen name='Post' component={Post} />
-          <Stack.Screen name='Myposts' component={Myposts} />
-           
-            
-          
-          </Stack.Navigator>
+              <Stack.Screen name='Login' component={Login}/>
+              <Stack.Screen name='Account' component={Account}/>
+              <Stack.Screen name='Post' component={Post} />
+              <Stack.Screen name='Myposts' component={Myposts} />
+              
+                
+              
+              </Stack.Navigator>
 
-        {/* </SafeAreaView> */}
-        </NavigationContainer>
+            {/* </SafeAreaView> */}
+              </NavigationContainer>
+        </PostProvider>
     </AuthProvider>
   );
 }
